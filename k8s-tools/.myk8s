@@ -1,0 +1,38 @@
+# -----------------------------------------------
+# Aliases for kubectl
+# -----------------------------------------------
+alias k=kubectl
+alias kg="kubectl get"
+alias kd="kubectl describe"
+alias ka="kubectl apply"
+alias kl="kubectl logs"
+alias klf="kubectl logs -f"
+
+# -----------------------------------------------
+# Bash shell auto completion
+# -----------------------------------------------
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+
+# -----------------------------------------------
+# Set env
+# -----------------------------------------------
+# For Krew
+export PATH="$HOME/.krew/bin:$PATH"
+
+# -----------------------------------------------
+# Helper functions
+# -----------------------------------------------
+
+# Show a certificate in the specified secret
+function k_cert() {
+  local secret=$1
+  local ns="default"
+  if [[ -n $2 ]]; then
+    ns=$2
+  fi  
+
+  local cert=$(mktemp)
+  kubectl get secret $secret -n $ns -o jsonpath='{.data.tls\.crt}' | base64 -d > $cert
+  openssl x509 -text -noout -in $cert
+}
