@@ -4,14 +4,15 @@
 # Create ~/.myk8s file and edit ~/.profile
 # to load it.
 # -------------------------------------------
-cp .myk8s ~/.myk8s
+mkdir -p ~/.k8s-tools
+cp utils ~/.k8s-tools/
 
-grep -q "source ~/.myk8s" ~/.profile
+grep -q "source ~/.k8s-tools/utils" ~/.profile
 if [[ $? -ne 0 ]]; then
   cat << EOS >> ~/.profile
 
-# Automatically added for .myk8s
-source ~/.myk8s
+# Automatically added for .k8s-tools
+source ~/.k8s-tools/utils
 EOS
 fi
 
@@ -37,3 +38,11 @@ if [[ ! -d ~/.krew/bin ]]; then
   kubectl krew install ctx
   kubectl krew install ns
 fi
+
+
+# -------------------------------------------
+# Install other tools
+# -------------------------------------------
+
+# stern
+kubectl krew install stern
